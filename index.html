@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find Your Seat | A&J Wedding</title>
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #0ea5e9;
+      --ring: rgba(14,165,233,.3);
+      --ok: #10b981;
+      --warn: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .app {
+      width: min(720px, 100%);
+    }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.06);
+      padding: 20px;
+      border: 1px solid rgba(0,0,0,.04);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    h1 { font-size: clamp(22px, 3.6vw, 32px); margin: 0 0 4px; letter-spacing: .5px; }
+    .sub { color: var(--muted); font-size: 14px; }
+
+    .search {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin: 12px 0 6px;
+    }
+    input[type="text"] {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px;
+      font-size: 16px;
+      outline: none;
+      transition: box-shadow .15s ease, border-color .15s ease;
+      background: #fff;
+    }
+    input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 6px var(--ring); }
+    button {
+      border: 0; cursor: pointer; border-radius: 14px; padding: 0 18px;
+      font-weight: 600; font-size: 15px; letter-spacing: .2px;
+      background: var(--accent); color: white; height: 48px;
+      box-shadow: 0 6px 14px rgba(14,165,233,.35);
+    }
+    button:active { transform: translateY(1px); }
+
+    .result { margin-top: 14px; }
+    .hint { color: var(--muted); font-size: 13px; margin-top: 6px; text-align: center; }
+
+    .seat-card {
+      display: grid; gap: 8px; padding: 16px; border: 1px solid #eef2f7; border-radius: 16px; background: #fcfdfd;
+    }
+    .seat-title { font-weight: 700; font-size: 18px; }
+    .badge { display: inline-block; font-weight: 700; padding: 6px 10px; border-radius: 999px; border: 1px solid #e5e7eb; }
+    .badge.ok { border-color: rgba(16,185,129,.25); background: rgba(16,185,129,.08); color: #047857; }
+    .badge.warn { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.08); color: #92400e; }
+
+    .list { display: grid; gap: 10px; }
+    .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px dashed #e5e7eb; border-radius: 12px; background: #fff; }
+    .row strong { font-size: 15px; }
+    .row small { color: var(--muted); }
+
+    footer { margin-top: 14px; text-align: center; color: var(--muted); font-size: 12px; }
+    .qr-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="card">
+      <header>
+        <h1>Find Your Seat</h1>
+        <div class="sub">Welcome to A&J's wedding ✨ • Type your full name as on the invitation</div>
+      </header>
+
+      <div class="search">
+        <input id="nameInput" type="text" placeholder="e.g. Priya R. Soondur" autocomplete="name" inputmode="text" />
+        <button id="searchBtn" aria-label="Search for your table">Find table</button>
+      </div>
+      <div class="hint">Tip: You can also just start typing — results update instantly.</div>
+
+      <section id="result" class="result"></section>
+
+      <footer>
+        If you need help, show this screen to our ushers 💐
+      </footer>
+    </div>
+    <p class="qr-note">QR code should point here once hosted (e.g., Netlify / GitHub Pages URL).</p>
+  </main>
+
+  <!-- 🔒 Replace this sample data with your real guest list before publishing -->
+  <script>
+    // Guest list data — you can paste this from a CSV export or manage via a tiny JSON file
+    // Fields are flexible; only `name` and `table` are used by this page.
+    const GUESTS = [
+      { name: "Priya Soondur", table: "5" },
+      { name: "Rakesh Appadoo", table: "12" },
+      { name: "Aisha Khan", table: "3" },
+      { name: "Jean Marc", table: "7" },
+      { name: "Momo Bono", table: "VIP-1" },
+      // { name: "Your Guest Name", table: "X" },
+    ];
+
+    // === Utility helpers ===
+    const norm = (s) => (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    function searchGuests(query) {
+      const q = norm(query);
+      if (!q) return [];
+      // Prioritize exact startsWith, then substring matches
+      const starts = [], subs = [];
+      for (const g of GUESTS) {
+        const n = norm(g.name);
+        if (n.startsWith(q)) starts.push(g);
+        else if (n.includes(q)) subs.push(g);
+      }
+      return [...starts, ...subs].slice(0, 10);
+    }
+
+    function renderResult(matches, query) {
+      const el = document.getElementById('result');
+      el.innerHTML = '';
+      if (!query?.trim()) return;
+
+      if (matches.length === 0) {
+        el.innerHTML = `
+          <div class="seat-card">
+            <div class="seat-title">No match found</div>
+            <div>We couldn't find anyone matching <strong>"${escapeHtml(query)}"</strong>.</div>
+            <div class="badge warn">Try a different spelling or your full name</div>
+          </div>`;
+        return;
+      }
+
+      // If a single exact full-name match, show the seat card directly
+      const exact = matches.find(m => norm(m.name) === norm(query));
+      if (exact) {
+        el.innerHTML = seatCard(exact);
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="list" role="list">
+          ${matches.map(m => rowItem(m)).join('')}
+        </div>
+      `;
+
+      // Attach click handlers to rows
+      for (const btn of el.querySelectorAll('[data-name]')) {
+        btn.addEventListener('click', () => {
+          el.innerHTML = seatCard({ name: btn.dataset.name, table: btn.dataset.table });
+        });
+      }
+    }
+
+    function seatCard(guest) {
+      return `
+        <div class="seat-card">
+          <div class="seat-title">Hello, <span class="badge ok">${escapeHtml(guest.name)}</span></div>
+          <div>You are seated at <strong>Table ${escapeHtml(guest.table)}</strong>.</div>
+          <div class="sub">Our ushers will guide you from the entrance. Enjoy the celebration! 🥂</div>
+        </div>`;
+    }
+
+    function rowItem(guest) {
+      return `
+        <div class="row" role="listitem">
+          <div>
+            <strong>${escapeHtml(guest.name)}</strong><br/>
+            <small>Table ${escapeHtml(guest.table)}</small>
+          </div>
+          <button data-name="${encodeHtmlAttr(guest.name)}" data-table="${encodeHtmlAttr(guest.table)}">View</button>
+        </div>
+      `;
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;','\'': '&#039;'}[c]));
+    }
+    function encodeHtmlAttr(s) {
+      return escapeHtml(String(s)).replace(/"/g, '&quot;');
+    }
+
+    // === Wire up UI ===
+    const input = document.getElementById('nameInput');
+    const btn = document.getElementById('searchBtn');
+
+    function doSearch() {
+      const q = input.value;
+      const matches = searchGuests(q);
+      renderResult(matches, q);
+    }
+
+    input.addEventListener('input', doSearch);
+    btn.addEventListener('click', doSearch);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+
+    // Autofocus on load for faster scanning flow
+    window.addEventListener('load', () => input.focus());
+  </script>
+</body>
+</html>
