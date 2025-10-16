@@ -4,97 +4,224 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Find Your Seat | A&J Wedding</title>
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#b45309" />
   <style>
+    /* —— Indian wedding inspired theme + sparkles —— */
     :root {
-      --bg: #faf8f6;
-      --card: #ffffff;
-      --ink: #1f2937;
-      --muted: #6b7280;
-      --accent: #0ea5e9;
-      --ring: rgba(14,165,233,.3);
-      --ok: #10b981;
-      --warn: #f59e0b;
+      /* Palette: marigold, saffron, rani pink, peacock teal, warm ivory */
+      --bg: #fff8ef;         /* warm ivory */
+      --bg-accent: #fde4c5;  /* soft saffron wash */
+      --card: #fffdfa;
+      --ink: #3a2a1a;        /* deep brown for text */
+      --muted: #7a6658;      /* warm muted */
+      --accent: #b45309;     /* burnt saffron */
+      --accent-2: #be185d;   /* rani pink */
+      --accent-3: #0f766e;   /* peacock teal */
+      --gold: #d4af37;       /* metallic gold-ish */
+      --ring: rgba(212,175,55,.35);
+      --ok: #15803d;
+      --warn: #b45309;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: var(--bg);
+      background: radial-gradient(1000px 500px at 10% -10%, var(--bg-accent), transparent),
+                  radial-gradient(1200px 600px at 110% 0%, rgba(190,24,93,.06), transparent),
+                  var(--bg);
       color: var(--ink);
       display: grid;
       place-items: center;
       padding: 24px;
+      position: relative;
+      overflow: hidden;
     }
-    .app {
-      width: min(720px, 100%);
+
+    /* Subtle animated sparkle layer */
+    .sparkle-layer {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .35;
+      background:
+        radial-gradient(2px 2px at 12% 22%, rgba(212,175,55,.9), transparent 60%),
+        radial-gradient(1.8px 1.8px at 28% 78%, rgba(190,24,93,.6), transparent 60%),
+        radial-gradient(2.2px 2.2px at 72% 32%, rgba(15,118,110,.8), transparent 60%),
+        radial-gradient(1.7px 1.7px at 86% 58%, rgba(212,175,55,.9), transparent 60%),
+        radial-gradient(2px 2px at 52% 12%, rgba(212,175,55,.7), transparent 60%),
+        radial-gradient(1.6px 1.6px at 16% 62%, rgba(190,24,93,.6), transparent 60%),
+        radial-gradient(2px 2px at 40% 90%, rgba(212,175,55,.75), transparent 60%),
+        radial-gradient(1.8px 1.8px at 90% 16%, rgba(190,24,93,.5), transparent 60%);
+      animation: twinkle 8s ease-in-out infinite alternate;
+      mix-blend-mode: screen;
     }
+    @keyframes twinkle {
+      0%   { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+      100% { background-position: 6px -8px, -10px 12px, 8px 6px, -6px -8px, 10px 8px, -8px -6px, -6px 10px, 8px -10px; }
+    }
+
+    /* Decorative toran (garland) */
+    .app { width: min(760px, 100%); position: relative; z-index: 1; }
+    .toran {
+      position: relative;
+      height: 28px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .toran::before,
+    .toran::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(90deg,
+        transparent 0 18px,
+        rgba(190,24,93,.12) 18px 19px,
+        transparent 19px 37px,
+        rgba(212,175,55,.18) 37px 38px);
+    }
+    .toran svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; }
+
     .card {
       background: var(--card);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.06);
-      padding: 20px;
-      border: 1px solid rgba(0,0,0,.04);
+      border-radius: 24px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.08);
+      padding: 22px 20px 20px;
+      border: 2px solid rgba(212,175,55,.35);
+      position: relative;
     }
-    header {
-      text-align: center;
-      margin-bottom: 18px;
+
+    /* Ornamental corner accents using gradients */
+    .card::before, .card::after {
+      content: ""; position: absolute; width: 90px; height: 90px; pointer-events: none;
+      background:
+        radial-gradient(12px 12px at 12px 12px, var(--gold) 0 30%, transparent 31%),
+        conic-gradient(from 45deg, rgba(190,24,93,.18), rgba(190,24,93,0));
+      mask: radial-gradient(70px 70px at 0 0, #000 40%, transparent 41%);
+      opacity: .45;
     }
-    h1 { font-size: clamp(22px, 3.6vw, 32px); margin: 0 0 4px; letter-spacing: .5px; }
+    .card::before { top: -6px; left: -6px; }
+    .card::after  { bottom: -6px; right: -6px; transform: rotate(180deg); }
+
+    header { text-align: center; margin: 6px 0 16px; }
+    h1 {
+      position: relative;
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-weight: 700; letter-spacing: .6px;
+      font-size: clamp(24px, 4vw, 36px);
+      margin: 0 0 6px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      overflow: hidden;
+    }
+    /* gentle shimmer across the title */
+    h1::after {
+      content: ""; position: absolute; inset: 0; transform: translateX(-120%);
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.35) 12%, transparent 25%);
+      animation: shine 5s ease-in-out infinite;
+      mix-blend-mode: screen; pointer-events: none;
+    }
+    @keyframes shine { 0%, 70% { transform: translateX(-120%);} 100% { transform: translateX(120%);} }
+
     .sub { color: var(--muted); font-size: 14px; }
+
+    .divider { display: grid; place-items: center; margin: 10px 0 14px; }
+    .lotus { width: 46px; height: 18px; opacity: .9; }
 
     .search {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 10px;
-      margin: 12px 0 6px;
+      margin: 10px 0 6px;
     }
     input[type="text"] {
       width: 100%;
       border-radius: 14px;
-      border: 1px solid #e5e7eb;
+      border: 1.5px solid rgba(212,175,55,.45);
       padding: 14px 16px;
       font-size: 16px;
       outline: none;
       transition: box-shadow .15s ease, border-color .15s ease;
-      background: #fff;
+      background: #fffdfa;
     }
-    input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 6px var(--ring); }
+    input[type="text"]:focus { border-color: var(--gold); box-shadow: 0 0 0 6px var(--ring); }
+
     button {
+      position: relative; overflow: hidden;
       border: 0; cursor: pointer; border-radius: 14px; padding: 0 18px;
-      font-weight: 600; font-size: 15px; letter-spacing: .2px;
-      background: var(--accent); color: white; height: 48px;
-      box-shadow: 0 6px 14px rgba(14,165,233,.35);
+      font-weight: 700; font-size: 15px; letter-spacing: .2px; height: 48px;
+      color: white;
+      background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 60%);
+      box-shadow: 0 8px 16px rgba(190,24,93,.35);
     }
-    button:active { transform: translateY(1px); }
+    /* sparkle sweep on hover */
+    button::after {
+      content: ""; position: absolute; inset: -20% -60%; transform: translateX(-120%) rotate(15deg);
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.6) 22%, transparent 40%);
+      animation: none; pointer-events: none; mix-blend-mode: screen;
+    }
+    button:hover::after { animation: sweep 1.25s ease; }
+    @keyframes sweep { to { transform: translateX(140%) rotate(15deg);} }
 
     .result { margin-top: 14px; }
     .hint { color: var(--muted); font-size: 13px; margin-top: 6px; text-align: center; }
 
     .seat-card {
-      display: grid; gap: 8px; padding: 16px; border: 1px solid #eef2f7; border-radius: 16px; background: #fcfdfd;
+      display: grid; gap: 8px; padding: 16px; border: 1.5px solid rgba(212,175,55,.35); border-radius: 16px; background: #fffcf5;
     }
-    .seat-title { font-weight: 700; font-size: 18px; }
-    .badge { display: inline-block; font-weight: 700; padding: 6px 10px; border-radius: 999px; border: 1px solid #e5e7eb; }
-    .badge.ok { border-color: rgba(16,185,129,.25); background: rgba(16,185,129,.08); color: #047857; }
-    .badge.warn { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.08); color: #92400e; }
+    .seat-title { font-weight: 800; font-size: 18px; color: var(--accent); }
+    .badge { display: inline-block; font-weight: 800; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(212,175,55,.35); background: #fff7e6; }
+    .badge.ok { border-color: rgba(21,128,61,.25); background: rgba(21,128,61,.08); color: #065f46; }
+    .badge.warn { border-color: rgba(180,83,9,.25); background: rgba(180,83,9,.08); color: #7c2d12; }
 
     .list { display: grid; gap: 10px; }
-    .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px dashed #e5e7eb; border-radius: 12px; background: #fff; }
+    .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px dashed rgba(212,175,55,.45); border-radius: 12px; background: #fffdfa; }
     .row strong { font-size: 15px; }
     .row small { color: var(--muted); }
 
     footer { margin-top: 14px; text-align: center; color: var(--muted); font-size: 12px; }
-    .qr-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .sparkle-layer, h1::after, button:hover::after { animation: none !important; }
+    }
   </style>
 </head>
 <body>
+  <!-- animated sparkles behind the card -->
+  <div class="sparkle-layer" aria-hidden="true"></div>
+
   <main class="app">
     <div class="card">
+      <div class="toran" aria-hidden="true">
+        <!-- Simple garland triangles -->
+        <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#b45309"/>
+              <stop offset="1" stop-color="#be185d"/>
+            </linearGradient>
+          </defs>
+          <g fill="url(#g1)">
+            <polygon points="0,0 5,10 10,0"/>
+            <polygon points="10,0 15,10 20,0"/>
+            <polygon points="20,0 25,10 30,0"/>
+            <polygon points="30,0 35,10 40,0"/>
+            <polygon points="40,0 45,10 50,0"/>
+            <polygon points="50,0 55,10 60,0"/>
+            <polygon points="60,0 65,10 70,0"/>
+            <polygon points="70,0 75,10 80,0"/>
+            <polygon points="80,0 85,10 90,0"/>
+            <polygon points="90,0 95,10 100,0"/>
+          </g>
+        </svg>
+      </div>
+
       <header>
         <h1>Find Your Seat</h1>
-        <div class="sub">Welcome to A&J's wedding ✨</div>
+        <div class="sub">Welcome to A&J's wedding ✨ • Shubh Vivah</div>
+        <div class="divider">
+          <!-- lotus divider -->
+          <svg class="lotus" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 28c16 0 28-10 28-10s-10 0-17-6c-5-5-11-8-11-8s-6 3-11 8c-7 6-17 6-17 6s12 10 28 10Z" stroke="rgba(212,175,55,.9)" stroke-width="2" fill="rgba(190,24,93,.08)"/>
+          </svg>
+        </div>
         <div class="sub">Type your full name as on the invitation</div>
       </header>
 
@@ -107,14 +234,19 @@
       <section id="result" class="result"></section>
 
       <footer>
-        If you need help, feel free to ask the team 💐
+        If you need help, show this screen to our ushers 💐
       </footer>
     </div>
-    <!-- <p class="qr-note">QR code should point here once hosted (e.g., Netlify / GitHub Pages URL).</p> -->
   </main>
 
   <!-- 🔒 Replace this sample data with your real guest list before publishing -->
   <script>
+    // ====== CONFIG (edit these) ======
+    const CONTACT_EMAIL = 'ushers@example.com'; // shown in the "missing person" flow
+    const CONTACT_PHONE = '+2300000000';       // tel: link; set to '' to hide
+    const FORM_URL = ''; // optional Google Form URL for quick intake; leave '' to hide
+    // ==================================
+
     // Guest list data — you can paste this from a CSV export or manage via a tiny JSON file
     // Fields are flexible; only `name` and `table` are used by this page.
     const GUESTS = [
@@ -153,7 +285,9 @@
             <div class="seat-title">No match found</div>
             <div>We couldn't find anyone matching <strong>"${escapeHtml(query)}"</strong>.</div>
             <div class="badge warn">Try a different spelling or your full name</div>
+            ${missingFlow(query)}
           </div>`;
+        attachMissingHandlers(query);
         return;
       }
 
@@ -199,6 +333,31 @@
       `;
     }
 
+    function missingFlow(query){
+      const mail = CONTACT_EMAIL ? `<a id="missingEmail" href="#">Email us</a>` : '';
+      const phone = CONTACT_PHONE ? ` • <a id="missingCall" href="tel:${encodeURIComponent(CONTACT_PHONE)}">Call us</a>` : '';
+      const form = FORM_URL ? ` • <a id="missingForm" href="${FORM_URL}" target="_blank" rel="noopener">Quick form</a>` : '';
+      const sep = (mail || phone || form) ? `<div class="sub">Need assistance? ${mail}${phone}${form}</div>` : '';
+      return `
+        <details style="margin-top:8px;">
+          <summary><strong>Can't find your name?</strong></summary>
+          <div style="margin-top:8px;">
+            Please see an usher, or contact us with your **full name** and **plus-one (if any)** so we can seat you right away.
+            ${sep}
+          </div>
+        </details>`;
+    }
+
+    function attachMissingHandlers(query){
+      const q = encodeURIComponent(query);
+      const now = new Date().toLocaleString();
+      const body = encodeURIComponent(`Hello, I can't find my name on the seating list.\n\nName typed: ${query}\nTime: ${now}\n\nCould you please assist?`);
+      const emailLink = document.getElementById('missingEmail');
+      if (emailLink && CONTACT_EMAIL) {
+        emailLink.setAttribute('href', `mailto:${CONTACT_EMAIL}?subject=Seating%20help&body=${body}`);
+      }
+    }
+
     function escapeHtml(s) {
       return s.replace(/[&<>"']/g, (c) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;','\'': '&#039;'}[c]));
     }
@@ -225,4 +384,3 @@
   </script>
 </body>
 </html>
-
