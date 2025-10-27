@@ -234,7 +234,7 @@
       <section id="result" class="result"></section>
 
       <footer>
-        If you need help, show this screen to our ushers 💐
+        If you need help, show this screen to our teams 💐
       </footer>
     </div>
   </main>
@@ -250,11 +250,20 @@
     // Guest list data — you can paste this from a CSV export or manage via a tiny JSON file
     // Fields are flexible; only `name` and `table` are used by this page.
     const GUESTS = [
-      { name: "Priya Soondur", table: "5" },
-      { name: "Rakesh Appadoo", table: "12" },
-      { name: "Aisha Khan", table: "3" },
-      { name: "Jean Marc", table: "7" },
-      { name: "Momo Bono", table: "VIP-1" },
+      { name: "Rakhee", table: "1" },
+      { name: "Raj", table: "1" },
+      { name: "Rhikita", table: "1" },
+      { name: "Kevin", table: "1" },
+      { name: "Keyish", table: "1" },
+      { name: "Kriyan", table: "1" },
+      { name: "Dolly", table: "1" },
+      { name: "Deepak", table: "2" },
+      { name: "Homika", table: "2" },
+      { name: "Mohal", table: "2" },
+      { name: "Yadhav", table: "2" },
+      { name: "Vikash", table: "2" },
+      { name: "Hansa", table: "2" },
+      { name: "Mahi", table: "2" },
       // { name: "Your Guest Name", table: "X" },
     ];
 
@@ -317,7 +326,7 @@
         <div class="seat-card">
           <div class="seat-title">Hello, <span class="badge ok">${escapeHtml(guest.name)}</span></div>
           <div>You are seated at <strong>Table ${escapeHtml(guest.table)}</strong>.</div>
-          <div class="sub">Our ushers will guide you from the entrance. Enjoy the celebration! 🥂</div>
+          <div class="sub">Our teams will guide you from the entrance. Enjoy the celebration! 🥂</div>
         </div>`;
     }
 
@@ -342,7 +351,7 @@
         <details style="margin-top:8px;">
           <summary><strong>Can't find your name?</strong></summary>
           <div style="margin-top:8px;">
-            Please see an usher, or contact us with your **full name** and **plus-one (if any)** so we can seat you right away.
+            Please see the team, or contact us with your **full name** and **plus-one (if any)** so we can seat you right away.
             ${sep}
           </div>
         </details>`;
@@ -384,3 +393,4 @@
   </script>
 </body>
 </html>
+
