@@ -215,7 +215,7 @@
 
       <header>
         <h1>Find Your Seat</h1>
-        <div class="sub">Welcome to Rhavish and Geshna's wedding ✨ • Shubh Vivah</div>
+        <div class="sub">Welcome to Rhavish and Geshna's wedding ✨</div>
         <div class="divider">
           <!-- lotus divider -->
           <svg class="lotus" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -587,55 +587,39 @@
       `;
     }
 
-    function missingFlow(query){
-      const mail = CONTACT_EMAIL ? `<a id="missingEmail" href="#">Email us</a>` : '';
-      const phone = CONTACT_PHONE ? ` • <a id="missingCall" href="tel:${encodeURIComponent(CONTACT_PHONE)}">Call us</a>` : '';
-      const form = FORM_URL ? ` • <a id="missingForm" href="${FORM_URL}" target="_blank" rel="noopener">Quick form</a>` : '';
-      const sep = (mail || phone || form) ? `<div class="sub">Need assistance? ${mail}${phone}${form}</div>` : '';
-      return `
-        <details style="margin-top:8px;">
-          <summary><strong>Can't find your name?</strong></summary>
-          <div style="margin-top:8px;">
-            Please see the team, or contact us with your **full name** and **plus-one (if any)** so we can seat you right away.
-            ${sep}
-          </div>
-        </details>`;
+   function missingFlow(){
+    return `
+      <details style="margin-top:8px;">
+      <summary><strong>Can't find your name?</strong></summary>
+      <div style="margin-top:8px;">
+      Please reach out to one of our ushers or wedding team members — they'll help you find your seat right away 💐
+      </div>
+      </details>`;
     }
-
-    function attachMissingHandlers(query){
-      const q = encodeURIComponent(query);
-      const now = new Date().toLocaleString();
-      const body = encodeURIComponent(`Hello, I can't find my name on the seating list.\n\nName typed: ${query}\nTime: ${now}\n\nCould you please assist?`);
-      const emailLink = document.getElementById('missingEmail');
-      if (emailLink && CONTACT_EMAIL) {
-        emailLink.setAttribute('href', `mailto:${CONTACT_EMAIL}?subject=Seating%20help&body=${body}`);
-      }
-    }
-
+    
+    
     function escapeHtml(s) {
-      return s.replace(/[&<>"']/g, (c) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;','\'': '&#039;'}[c]));
+      return s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#039;'}[c]));
     }
     function encodeHtmlAttr(s) {
       return escapeHtml(String(s)).replace(/"/g, '&quot;');
     }
-
-    // === Wire up UI ===
+    
+    
     const input = document.getElementById('nameInput');
     const btn = document.getElementById('searchBtn');
-
+    
+    
     function doSearch() {
       const q = input.value;
       const matches = searchGuests(q);
       renderResult(matches, q);
     }
-
+    
+    
     input.addEventListener('input', doSearch);
     btn.addEventListener('click', doSearch);
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
-
-    // Autofocus on load for faster scanning flow
-    window.addEventListener('load', () => input.focus());
-  </script>
+</script>
 </body>
 </html>
-
